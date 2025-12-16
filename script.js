@@ -294,19 +294,39 @@ function showNotification(message, type) {
 }
 
 // Typing effect for hero tagline
-function typeWriter(element, text, speed = 100) {
+function continuousTypingSimple(element, text, speed = 100, pause = 1000) {
     let i = 0;
-    element.innerHTML = '';
-
+    
     function type() {
         if (i < text.length) {
-            element.innerHTML += text.charAt(i);
+            element.textContent += text.charAt(i);
             i++;
             setTimeout(type, speed);
+        } else {
+            // Wait, then restart
+            setTimeout(() => {
+                element.textContent = '';
+                i = 0;
+                type();
+            }, pause);
         }
     }
+    
     type();
 }
+
+// Initialize
+window.addEventListener('load', function () {
+    const tagline = document.querySelector('.hero .tagline');
+    if (!tagline) return;
+    
+    const originalText = tagline.textContent;
+    tagline.textContent = '';
+    
+    setTimeout(() => {
+        continuousTypingSimple(tagline, originalText, 80, 1000);
+    }, 500);
+});
 
 // Initialize typing effect after page loads
 window.addEventListener('load', function () {
